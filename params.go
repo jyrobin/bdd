@@ -14,7 +14,10 @@
 
 package bdd
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 type params struct {
 	vals map[string]string
@@ -37,10 +40,25 @@ func Params(args []string) params {
 func (args params) Get(name string, otherwise ...string) string {
 	if val, ok := args.vals[name]; ok {
 		return val
-	} else if len(otherwise) > 0 {
+	}
+
+	if len(otherwise) > 0 {
 		return otherwise[0]
 	}
 	return ""
+}
+
+func (args params) GetInt(name string, otherwise ...int) int {
+	if val, ok := args.vals[name]; ok {
+		if ret, err := strconv.Atoi(val); err == nil {
+			return ret
+		}
+	}
+
+	if len(otherwise) > 0 {
+		return otherwise[0]
+	}
+	return 0
 }
 
 func ParamString(args []string, key string, otherwise ...string) string {
